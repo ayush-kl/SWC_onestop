@@ -8,30 +8,37 @@ const formSchema = new Schema({
   phoneNumber: { type: Number, required: true },
   outgoingLocation: { type: String, required: true },
 
-  date: { type: Date, required: true },
+  exitTimeDate: { type: Date, default: new Date },
   rollNumber: {
     type:Number,required:true
   },
+  entryTime:{
+    type: Date,
+    default: null
+  },
   roomNumber: {
     type: String,
-    required:true
+    
   },
   hostel: {
     type: String,
-    required:true
+    
   },
   department:{
     type:String,
-    required:true
   },
   Course:{
     type:String,
-    required:true
+    
   },
   Status:{
     type:Boolean,
     required:true
-  }
+  },
+  Entrytime:{
+    type: String,
+   
+  }, 
 
 
 

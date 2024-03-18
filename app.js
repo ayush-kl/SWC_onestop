@@ -21,23 +21,23 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri);
-const connection = mongoose.connection;
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
-});
+// const uri = process.env.ATLAS_URI;
+// mongoose.connect(uri);
+// const connection = mongoose.connection;
+// connection.once('open', () => {
+//     console.log("MongoDB database connection established successfully");
+// });
 
 
-const exitRouter = require('./routes/exit');
+const exitRouter = require('./routes/khokhaEntryRouter');
 const usersRouter = require('./routes/user');
-app.use('/exit', exitRouter);
-app.use('/users', usersRouter);
+app.use('/', exitRouter);
+
 
 
 app.get("/",(req,res)=>{
   return res.sendFile("/public/index.html");
-});
+}); 
 
 // app.get('/generate-qr-code/:formDataId', async (req, res) => {
 //   try {
@@ -65,6 +65,10 @@ io.on('connection', (socket) => {
 
 
 
-server.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
+app.listen(port,async () => {
+    
+    console.log(`Express server listening on ${port}  see docs at /docs`);
+    await mongoose.connect(process.env.ATLAS_URI);
+    console.log("Connected to MongoDB");
+   
 });
