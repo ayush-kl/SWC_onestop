@@ -7,6 +7,7 @@ const { Server } = require('socket.io');
 const http = require('http');
 const formDataModel = require('./backend/exitmodel');
 const generateQRCode = require('./backend/qrcode');
+const { authenticateSocket } = require("./middleware/user.auth.js");
 
 dotenv.config();
 
@@ -50,18 +51,18 @@ app.get("/",(req,res)=>{
 //   }
 // });
 
-io.on('connection', (socket) => {
-    console.log('A user connected',socket.id);
-    socket.on('requestQRCodeDataURL', async (data) => {
-      try {
-          const formDataId = data.formDataId;
-          const qrCodeDataURL = await generateQRCode(formDataId);
-          socket.emit('qrCodeDataURL', { qrCodeDataURL });
-      } catch (error) {
-          console.error('Error generating QR code:', error);
-      }
-  });
+io.use((socket, next) => {
+  authenticateSocket(socket, next);
 });
+
+
+io.on('connection', (socket) => {
+  console.log('A user connected',socket.id);
+
+  socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+  });
+}); 
 
 
 
